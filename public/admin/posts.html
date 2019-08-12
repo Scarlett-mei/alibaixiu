@@ -30,18 +30,19 @@
       <div class="page-action">
         <!-- show when multiple checked -->
         <a class="btn btn-danger btn-sm" href="javascript:;" style="display: none">批量删除</a>
-        <form class="form-inline">
-          <select name="" class="form-control input-sm">
-            <option value="">所有分类</option>
+        <form class="form-inline" id="ssForm" >
+          <select name="category" class="form-control input-sm" id="categoryBox" >
+            <option value="all">所有分类</option>
+
           </select>
-          <select name="" class="form-control input-sm">
-            <option value="">所有状态</option>
-            <option value="">草稿</option>
-            <option value="">已发布</option>
+          <select name="state" class="form-control input-sm" id="s">
+            <option value="all">所有状态</option>
+            <option value="0">草稿</option>
+            <option value="1">已发布</option>
           </select>
-          <button class="btn btn-default btn-sm">筛选</button>
+          <button class="btn btn-default btn-sm" type="button" id="sBtn" >筛选</button>
         </form>
-        <ul class="pagination pagination-sm pull-right" id="page" >
+        <ul class="pagination pagination-sm pull-right" id="page" name="page" >
           <!-- <li><a href="#">上一页</a></li>
           <li><a href="#">1</a></li>
           <li><a href="#">2</a></li>
@@ -139,8 +140,8 @@
       <td class="text-center">{{$imports.formDate($value.createAt)}}</td>
       <td class="text-center">{{$value.state == 1?'已发布':'未发布'}}</td>
       <td class="text-center">
-        <a href="javascript:;" class="btn btn-default btn-xs">编辑</a>
-        <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
+        <a href="post-add.html?id={{$value._id}}" class="btn btn-default btn-xs">编辑</a>
+        <a href="javascript:;" class="btn btn-danger btn-xs del" data-id="{{$value._id}}" >删除</a>
       </td>
     </tr>
     {{/each}}
@@ -148,17 +149,26 @@
 
   <!-- 分页模板 -->
   <script type="text/html" id="pagePid" >
-   {{if page > 1}}
-    <li><a href="javascript:;"  onclick="changePage({{page - 1}})">上一页</a></li>
-   {{/if}}
+    {{ if page > 1}}
+    <li> <a href="javascript:;" onclick="changePage({{page-1}})" >上一页</a></li>
+    {{/if}}
     <!-- diplay是数据集合 -->
     {{each display}}
-    <li><a href="javascript:;" onclick="changePage({{$value}})" >{{$value}}</a></li>
+    <li class="{{$value == page?'active':''}}" ><a href="javascript:;" onclick="changePage({{$value}})" >{{$value}}</a></li>
     {{/each}}
-    {{if page > pages}}
-    <li><a href="javascript:;" onclick="changePage({{page + 1}})">下一页</a></li>
+    {{if page < pages}}
+    <li><a href="javascript:;" onclick="changePage({{page - 0 + 1}})">下一页</a></li>
     {{/if}}
   </script>
+
+  <!-- 筛选状态模板 -->
+  <script type="text/html" id="sShearch">
+    <!-- <option value="">所有模板</option> -->
+    {{each data}}
+    <option value="{{$value._id}}">{{$value.title}}</option>
+    {{/each}}
+  </script>
+
   <!-- 引入js文件 -->
   <script src="../assets/js/posts.js"></script>
   <script>NProgress.done()</script>
